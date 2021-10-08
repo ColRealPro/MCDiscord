@@ -1,0 +1,27 @@
+name: DiscordToMCLink
+version: '1.0-BETA'
+main: me.colrealpro.discordlinkbot.Main
+api-version: 1.17
+depend: [ ProtocolLib ]
+authors: [ ColRealPro ]
+description: Links discord with minecraft
+commands:
+  show:
+    description: Allows you to toggle showing messages from other channels
+    usage: /<command> [Channel] [true/false]
+    aliases: [channel, showchannel, togglechannel]
+  chatlink:
+    description: Allows you to toggle settings for the chatlink
+    usage: /<command> [Command] [True/False]
+    aliases: [cl, discordmessages]
+  unverify:
+    description: private command for owners
+    usage: /<command> [Player] [Reason]
+    permission: chatlink.unverify
+    permission-message: Sorry, you don't have the required permission to execute this command!
+  sendmessages:
+    description: Used to send data between plugins created by ColRealPro
+    usage: /<command> [Data]
+  opensigntest:
+    description: Open sign test
+    usage: /<command>
