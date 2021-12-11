@@ -121,7 +121,7 @@ public class Messages extends ListenerAdapter implements Listener {
                         Main.data.getConfig().set("Users." + player.getUniqueId() + ".VerificationCode", verifyCode);
                         Main.data.saveConfig();
                     }
-                    event.setKickMessage(ChatColor.BLUE + "You're account is not linked with discord!\n" + ChatColor.WHITE + "Please read the rules and link you account by sending " + ChatColor.YELLOW + "SMPBot " + ChatColor.WHITE + "The following characters " + ChatColor.YELLOW + verifyCode + ChatColor.WHITE + "\nIf it " + ChatColor.RED + "fails " + ChatColor.WHITE +  "to verify you please " + ChatColor.YELLOW + "re-connect" + ChatColor.WHITE + " for a new verification code");
+                    event.setKickMessage(ChatColor.BLUE + "You're account is not linked with discord!\n" + ChatColor.WHITE + "Please read the rules and link you account by sending " + ChatColor.YELLOW +  Main.jda.getSelfUser().getAsTag() + " " + ChatColor.WHITE + "The following characters " + ChatColor.YELLOW + verifyCode + ChatColor.WHITE + "\nIf it " + ChatColor.RED + "fails " + ChatColor.WHITE +  "to verify you please " + ChatColor.YELLOW + "re-connect" + ChatColor.WHITE + " for a new verification code");
                     event.disallow(PlayerLoginEvent.Result.KICK_BANNED, event.getKickMessage());
                 }
                 return;

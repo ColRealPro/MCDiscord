@@ -60,7 +60,7 @@ public class Link implements CommandExecutor {
             // Verify Message
             BaseComponent verifyMessage = new TextComponent("");
 
-            TextComponent Line1 = new TextComponent("Please DM the following code to SMPBot:\n");
+            TextComponent Line1 = new TextComponent("Please DM the following code to " + Main.jda.getSelfUser().getAsTag() + ":\n");
             Line1.setColor(ChatColor.BLUE);
             TextComponent code = new TextComponent(verifyCode);
             code.setColor(ChatColor.YELLOW);
