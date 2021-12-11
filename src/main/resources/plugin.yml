@@ -1,4 +1,4 @@
-name: DiscordToMCLink
+name: MCDiscord
 version: '1.0-BETA'
 main: me.colrealpro.discordlinkbot.Main
 api-version: 1.17
@@ -24,4 +24,11 @@ commands:
     usage: /<command> [Data]
   opensigntest:
     description: Open sign test
+    usage: /<command>
+  link:
+    description: link discord account
+    usage: /<command>
+    aliases: [linkaccount, linkdiscord]
+  errorinfo:
+    description: used to show error info
     usage: /<command>

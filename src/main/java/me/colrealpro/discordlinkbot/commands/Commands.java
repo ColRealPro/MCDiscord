@@ -1,6 +1,12 @@
 package me.colrealpro.discordlinkbot.commands;
 
+import com.sun.org.apache.xpath.internal.operations.Bool;
 import me.colrealpro.discordlinkbot.Main;
+import me.colrealpro.discordlinkbot.Messages;
+import net.dv8tion.jda.api.entities.Guild;
+import net.dv8tion.jda.api.entities.Message;
+import net.dv8tion.jda.api.entities.TextChannel;
+import net.md_5.bungee.api.chat.*;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
@@ -12,6 +18,7 @@ import org.bukkit.plugin.Plugin;
 
 import java.time.Instant;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Set;
 
@@ -28,10 +35,40 @@ public class Commands implements CommandExecutor {
     }
 
     private Plugin plugin = Main.getPlugin(Main.class);
+    private Guild guild = Main.guild;
 
-    public static List<String> toggledGeneral = new ArrayList<String>();
-    public static List<String> toggledMessages = new ArrayList<String>();
-    public static List<String> toggledVisible = new ArrayList<String>();
+    public static List<String> toggledMessages = new ArrayList<>();
+    public static List<String> toggledVisible = new ArrayList<>();
+
+    public String Capital(String message) {
+        // stores each characters to a char array
+        char[] charArray = message.toCharArray();
+        boolean foundSpace = true;
+
+        for(int i = 0; i < charArray.length; i++) {
+
+            // if the array element is a letter
+            if(Character.isLetter(charArray[i])) {
+
+                // check space is present before the letter
+                if(foundSpace) {
+
+                    // change the letter into uppercase
+                    charArray[i] = Character.toUpperCase(charArray[i]);
+                    foundSpace = false;
+                }
+            }
+
+            else {
+                // if the new character is not character
+                foundSpace = true;
+            }
+        }
+
+        // convert the char array to the string
+        message = String.valueOf(charArray);
+        return message;
+    }
 
     ConsoleCommandSender console = Bukkit.getServer().getConsoleSender();
     @Override
@@ -41,51 +78,55 @@ public class Commands implements CommandExecutor {
 
         // /show (Channel) (true/false)
         if (command.getName().equalsIgnoreCase("show")) {
+
             if (!(args.length >= 2)) {
                 player.sendMessage(ChatColor.BOLD + "" + ChatColor.RED + "(!)" + ChatColor.RESET + ChatColor.GOLD + " Syntax: (Channel) (True/False)");
                 return true;
             }
 
-            String TrueFalse = args[1].toLowerCase().replaceAll(" ","");
-            String Channel = args[0].toLowerCase().replaceAll(" ","");
+            String TrueFalse = args[1].toLowerCase().replaceAll(" ", "");
 
-
-            if (TrueFalse.equals("true") || TrueFalse.equals("false")) {
-                if (Channel.equals("general")) {
-                    if (TrueFalse.equals("true")) {
-                        if (toggledGeneral.contains(player.getName())) {
-                            player.sendMessage(ChatColor.BOLD + "" + ChatColor.RED + "(!)" + ChatColor.RESET + ChatColor.GOLD + " You are already showing #General");
-                        } else {
-                            player.sendMessage(ChatColor.BOLD + "" + ChatColor.GREEN + "(!)" + ChatColor.RESET + ChatColor.GOLD + " #General will now be shown in chat");
-                            toggledGeneral.add(player.getName());
-                        }
-                    } else {
-                        if (toggledGeneral.contains(player.getName())) {
-                            //player.sendMessage("Debug:" + toggledGeneral.toString());
-                            player.sendMessage(ChatColor.BOLD + "" + ChatColor.RED + "(!)" + ChatColor.RESET + ChatColor.GOLD + " #General will no longer be shown in chat");
-                            toggledGeneral.remove(player.getName());
-                            return true;
-                        } else {
-                            player.sendMessage(ChatColor.BOLD + "" + ChatColor.RED + "(!)" + ChatColor.RESET + ChatColor.GOLD + " You already have #General disabled!");
-                        }
-                    }
-                } else {
-                    player.sendMessage(ChatColor.BOLD + "" + ChatColor.RED + "(!)" + ChatColor.RESET + ChatColor.GOLD + " Supported Channels: General");
-                }
-            } else {
-                player.sendMessage(ChatColor.BOLD + "" + ChatColor.RED + "(!)" + ChatColor.RESET + ChatColor.GOLD + " Please enter a true or false value!");
-            }
-
-            /*if (toggledGeneral.contains(player.getName())) {
-                //player.sendMessage("Debug:" + toggledGeneral.toString());
-                player.sendMessage(ChatColor.BOLD + "" + ChatColor.RED + "(!)" + ChatColor.RESET + ChatColor.GOLD + " #General will no longer be shown in chat");
-                toggledGeneral.remove(player.getName());
+            if (!(TrueFalse.equals("true") || TrueFalse.equals("false"))) {
+                player.sendMessage(ChatColor.BOLD + "" + ChatColor.RED + "(!)" + ChatColor.RESET + ChatColor.GOLD + " Syntax: (Channel) (True/False)");
                 return true;
             }
 
-            player.sendMessage(ChatColor.BOLD + "" + ChatColor.GREEN + "(!)" + ChatColor.RESET + ChatColor.GOLD + " #General will now be shown in chat");
-            toggledGeneral.add(player.getName());
-            //player.sendMessage("Debug:" + toggledGeneral.toString());*/
+            List<TextChannel> textChannelsByName = guild.getTextChannelsByName(args[0], true);
+
+            if (textChannelsByName.isEmpty()) {
+                player.sendMessage(ChatColor.BOLD + "" + ChatColor.RED + "(!)" + ChatColor.RESET + ChatColor.GOLD + " This channel doesn't exist!");
+                return true;
+            }
+
+            if (textChannelsByName.size() > 1) {
+                BaseComponent errorMessage = new TextComponent("");
+                TextComponent Message = new TextComponent(ChatColor.BOLD + "" + ChatColor.RED + "(!)" + ChatColor.RESET + ChatColor.GOLD + " Unable to show channel");
+                TextComponent Info = new TextComponent(" [Show Info]");
+                Info.setColor(net.md_5.bungee.api.ChatColor.GRAY);
+                Info.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder("Click To Show Info").create()));
+                Info.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/discordtomclink:errorinfo duplicate"));
+                errorMessage.addExtra(Message);
+                errorMessage.addExtra(Info);
+                player.spigot().sendMessage(errorMessage);
+                return true;
+            }
+
+            HashMap<Long, Boolean> data = new HashMap<>();
+
+            if (Messages.toggledChannels.get(player.getUniqueId()) != null) {
+                data = Messages.toggledChannels.get(player.getUniqueId());
+            }
+
+            data.put(textChannelsByName.get(0).getIdLong(), Boolean.parseBoolean(TrueFalse));
+
+            Messages.toggledChannels.put(player.getUniqueId(), data);
+
+            if (Boolean.parseBoolean(TrueFalse)) {
+                player.sendMessage(ChatColor.BOLD + "" + ChatColor.GREEN + "(!) " + ChatColor.RESET + ChatColor.GOLD + Capital(textChannelsByName.get(0).getName().replaceAll("-", " ")) + " will now be shown in chat");
+            } else {
+                player.sendMessage(ChatColor.BOLD + "" + ChatColor.GREEN + "(!) " + ChatColor.RESET + ChatColor.GOLD + Capital(textChannelsByName.get(0).getName().replaceAll("-", " ")) + " will no longer be shown in chat");
+            }
+
             return true;
         }
 
@@ -176,7 +217,7 @@ public class Commands implements CommandExecutor {
                         Main.data.getConfig().set("Users." + target.getUniqueId() + ".timeUnallowed", Instant.now().getEpochSecond());
                         Main.data.getConfig().set("Users." + target.getUniqueId() + ".reason", reason.toString());
                         int timeNumber = 3*60;
-                        Main.data.getConfig().set("Users." + target.getUniqueId() + "time", timeNumber);
+                        Main.data.getConfig().set("Users." + target.getUniqueId() + ".time", timeNumber);
                         String timeString = getDurationString(timeNumber);
                         Main.data.saveConfig();
                         target.kickPlayer(ChatColor.BLUE + "You have been unverified!\n" + ChatColor.WHITE + "Reason: " + ChatColor.YELLOW + reason.toString() + ChatColor.WHITE + "\nYou are not allowed to re verify for " + ChatColor.YELLOW + timeString + ChatColor.WHITE + "\nUse this time to read the rules again!");

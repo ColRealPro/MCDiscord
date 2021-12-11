@@ -5,10 +5,15 @@
 BotToken: 1234
 
 # This is the channel that minecraft messages will be sent to
-MessagesChannel: smp-chat
+# If the bot finds multiple channels named this, The plugin will be disabled if you would like to avoid this Override it with chat channel id
+MessagesChannel: server-chat
+UseChannelId: false
 
 # Guild/Discord Server ID (Look here if you dont know how to get that: https://support.discord.com/hc/en-us/articles/206346498-Where-can-I-find-my-User-Server-Message-ID-)
 GuildID: 0
+
+#Show Join Messages?
+showjoinmessages: true
 
 # If verificatedRequired is set to true a player will not be able to join the server non-verified
 # Default: false
@@ -16,10 +21,15 @@ VerificationRequired: false
 
 # Verification Code Length is how long you want the verification code to be (Default: 5, Ex: QWOP5)
 # Unverification Code Length is how long you want the Unverification code to be (Default: 8, Ex: EDOPA7H1)
-# Verification Code is the first time login code that a player must enter to join the server
+# Verification Code is the first time code a player must use to link their discord account with their mc account
 # Unverification Code is the code a user must input after they have been unverified
+# Note: If a player unlinks their account they wont be given the unverification code
 VerificationCodeLength: 5
 UnverificationCodeLength: 8
+
+# Permissions Rewarded when a player has linked their Discord Account with their Minecraft Account
+# Note: PERMISSION PLUGINS MAY BREAK THIS
+PermissionsRewarded:
 
 # This is the role that will be checked for sendmessages permission in channels
 # EITHER PUT THE ID OR THE ROLE NAME IF THE BOT FINDS TWO OR MORE ROLES WITH THIS NAME IT WILL AUTOMATICALLY DEFAULT TO @EVERYONE
@@ -29,3 +39,6 @@ RoleChecked: everyone
 # Save the last used channel a player sent a message to
 # Default: false
 SaveLastUsedChannel: false
+
+# Show debug (True or false) showing debug is not meant to be used and is only used in testing
+ShowDebug: false

@@ -42,12 +42,16 @@ public class UnverifyInventories extends Functions implements Listener {
     public void onClick(InventoryClickEvent event) {
         Player player = (Player) event.getWhoClicked();
         if (event.getClickedInventory() == null) {
-            player.sendMessage("Debug: null");
+            if (plugin.getConfig().getBoolean("ShowDebug") == true) {
+                player.sendMessage("Debug: null");
+            }
             return;
         }
         if (!event.getClickedInventory().equals(ActiveInventories.get(player.getUniqueId()))) {
-            player.sendMessage("Debug: ClickedInv not Active Inventory");
-            player.sendMessage("Inventory Type: " + ActiveInventoryTypes.get(player.getUniqueId()));
+            if (plugin.getConfig().getBoolean("ShowDebug") == true) {
+                player.sendMessage("Debug: ClickedInv not Active Inventory");
+                player.sendMessage("Inventory Type: " + ActiveInventoryTypes.get(player.getUniqueId()));
+            }
             return;
         }
         if (ActiveInventoryTypes.get(player.getUniqueId()).equals("Custom")) {
