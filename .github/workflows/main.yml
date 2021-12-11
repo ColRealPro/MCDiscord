@@ -44,4 +44,4 @@ jobs:
         with:
           name: MCDiscord-${{ steps.ref.outputs.branch }}
           # Filter built files to disregard -sources and -dev, and leave only the minecraft-compatible jars.
-          path: build/libs/*[0-9].jar
+          path: target/*[0-9].jar
