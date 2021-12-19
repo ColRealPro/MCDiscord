@@ -43,4 +43,5 @@ Link your discord account to Minecraft!
 Allows you to modify settings
 #### Current Settings:
 Send Messages: Toggle if your messages are sent to discord
+
 Visible: Toggle if you see discord chat
