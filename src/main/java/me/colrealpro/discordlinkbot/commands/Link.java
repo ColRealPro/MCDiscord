@@ -64,7 +64,7 @@ public class Link implements CommandExecutor {
             Line1.setColor(ChatColor.BLUE);
             TextComponent code = new TextComponent(verifyCode);
             code.setColor(ChatColor.YELLOW);
-            code.setClickEvent(new ClickEvent(ClickEvent.Action.COPY_TO_CLIPBOARD, "Copied"));
+            code.setClickEvent(new ClickEvent(ClickEvent.Action.COPY_TO_CLIPBOARD, verifyCode));
             code.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder("Click To Copy").create()));
 
             verifyMessage.addExtra(Line1);
