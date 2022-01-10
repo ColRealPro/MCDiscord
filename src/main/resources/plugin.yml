@@ -1,7 +1,7 @@
 name: MCDiscord
 version: '1.0-BETA'
 main: me.colrealpro.discordlinkbot.Main
-api-version: 1.18
+api-version: 1.17
 depend: [ ProtocolLib ]
 authors: [ ColRealPro ]
 description: Links discord with minecraft
