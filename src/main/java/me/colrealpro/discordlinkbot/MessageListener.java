@@ -17,21 +17,20 @@ import org.bukkit.event.player.PlayerAdvancementDoneEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.plugin.Plugin;
+import org.bukkit.scheduler.BukkitRunnable;
 
 import java.awt.*;
 import java.util.*;
 import java.util.List;
-import java.util.logging.Logger;
 
 public class MessageListener implements Listener {
 
-    private Plugin plugin = Main.getPlugin(Main.class);
-    private Logger logger = plugin.getLogger();
+    private final Plugin plugin = Main.getPlugin(Main.class);
 
-    private Guild guild = Main.guild;
-    private TextChannel messageChannel = Main.channel;
+    private final Guild guild = Main.guild;
+    private final TextChannel messageChannel = Main.channel;
 
-    private HashMap<UUID, String> lastChnanels = new HashMap<>();
+    private final HashMap<UUID, String> lastChnanels = new HashMap<>();
 
     private final Map<String, String> keyToDisplay = new HashMap<>();
 
@@ -92,18 +91,20 @@ public class MessageListener implements Listener {
                 }
                 lastChnanels.put(player.getUniqueId(), channel.getName());
                 MessageBuilder splitMessage = new MessageBuilder();
-                splitMessage.append("**<" + player.getName() + ">** " + Message);
+                String arr[] = Message.split(" ", 2);
+                splitMessage.append("**<" + player.getName() + ">** " + arr[1]);
                 splitMessage.stripMentions(guild.getJDA());
 
-                String arr[] = splitMessage.build().toString().split(" ", 2);
-
-                String message = arr[1];
-
-                channel.sendMessage(message);
+                new BukkitRunnable() {
+                    @Override
+                    public void run() {
+                        channel.sendMessage(splitMessage.build()).queue();
+                    }
+                }.runTaskLater(this.plugin, 1);
 
                 String channelName = Capital(channel.getName().replaceAll("-", " "));
 
-                Bukkit.broadcastMessage(ChatColor.WHITE + "[" + ChatColor.BLUE + "To " +  channelName + ChatColor.WHITE + "] " + ChatColor.BOLD + player.getName() + ChatColor.RESET + ChatColor.DARK_GRAY + " >> " + ChatColor.WHITE + Message);
+                Bukkit.broadcastMessage(ChatColor.WHITE + "[" + ChatColor.BLUE + "To " +  channelName + ChatColor.WHITE + "] " + ChatColor.BOLD + player.getName() + ChatColor.RESET + ChatColor.DARK_GRAY + " >> " + ChatColor.WHITE + arr[1]);
                 event.setCancelled(true);
                 return;
             }
@@ -124,14 +125,16 @@ public class MessageListener implements Listener {
                     }
                     lastChnanels.put(player.getUniqueId(), channel.getName());
                     MessageBuilder splitMessage = new MessageBuilder();
-                    splitMessage.append("**<" + player.getName() + ">** " + Message);
+                    String arr[] = Message.split(" ", 2);
+                    splitMessage.append("**<" + player.getName() + ">** " + arr[1]);
                     splitMessage.stripMentions(guild.getJDA());
 
-                    String arr[] = splitMessage.build().toString().split(" ", 2);
-
-                    String message = arr[1];
-
-                    channel.sendMessage(message);
+                    new BukkitRunnable() {
+                        @Override
+                        public void run() {
+                            channel.sendMessage(splitMessage.build()).queue();
+                        }
+                    }.runTaskLater(this.plugin, 1);
                     String firstLetStr = channel.getName().substring(0, 1);
                     // Get remaining letter using substring
                     String remLetStr = channel.getName().substring(1);
@@ -139,15 +142,14 @@ public class MessageListener implements Listener {
                     // convert the first letter of String to uppercase
                     firstLetStr = firstLetStr.toUpperCase();
 
-                    // concantenate the first letter and remaining string
+                    // concatenate the first letter and remaining string
                     String channelName = firstLetStr + remLetStr;
-                    Bukkit.broadcastMessage(ChatColor.WHITE + "[" + ChatColor.BLUE + "To " +  channelName + ChatColor.WHITE + "] " + ChatColor.BOLD + player.getName() + ChatColor.RESET + ChatColor.DARK_GRAY + " >> " + ChatColor.WHITE + Message);
+                    Bukkit.broadcastMessage(ChatColor.WHITE + "[" + ChatColor.BLUE + "To " +  channelName + ChatColor.WHITE + "] " + ChatColor.BOLD + player.getName() + ChatColor.RESET + ChatColor.DARK_GRAY + " >> " + ChatColor.WHITE + arr[1]);
                     event.setCancelled(true);
-                    return;
                 } else {
                     player.sendMessage("Debug: unable to find channel!");
-                    return;
                 }
+                return;
             }
             TextChannel channel = guild.getTextChannelsByName(args[0], true).get(0);
             if (lastChnanels.containsKey(player.getUniqueId())) {
@@ -155,14 +157,16 @@ public class MessageListener implements Listener {
             }
             lastChnanels.put(player.getUniqueId(), channel.getName());
             MessageBuilder splitMessage = new MessageBuilder();
-            splitMessage.append("**<" + player.getName() + ">** " + Message);
+            String arr[] = Message.split(" ", 2);
+            splitMessage.append("**<" + player.getName() + ">** " + arr[1]);
             splitMessage.stripMentions(guild.getJDA());
 
-            String arr[] = splitMessage.build().toString().split(" ", 2);
-
-            String message = arr[1];
-
-            channel.sendMessage(message);
+            new BukkitRunnable() {
+                @Override
+                public void run() {
+                    channel.sendMessage(splitMessage.build()).queue();
+                }
+            }.runTaskLater(this.plugin, 1);
             String firstLetStr = channel.getName().substring(0, 1);
             // Get remaining letter using substring
             String remLetStr = channel.getName().substring(1);
@@ -170,26 +174,33 @@ public class MessageListener implements Listener {
             // convert the first letter of String to uppercase
             firstLetStr = firstLetStr.toUpperCase();
 
-            // concantenate the first letter and remaining string
+            // concatenate the first letter and remaining string
             String channelName = firstLetStr + remLetStr;
-            Bukkit.broadcastMessage(ChatColor.WHITE + "[" + ChatColor.BLUE + "To " +  channelName + ChatColor.WHITE + "] " + ChatColor.BOLD + player.getName() + ChatColor.RESET + ChatColor.DARK_GRAY + " >> " + ChatColor.WHITE + Message);
+            Bukkit.broadcastMessage(ChatColor.WHITE + "[" + ChatColor.BLUE + "To " +  channelName + ChatColor.WHITE + "] " + ChatColor.BOLD + player.getName() + ChatColor.RESET + ChatColor.DARK_GRAY + " >> " + ChatColor.WHITE + arr[1]);
             event.setCancelled(true);
             return;
         }
 
         List<String> toggledMessages = ConsoleCommands.toggledMessages;
+        if (event.isCancelled()) return;
         if (!toggledMessages.contains(player.getName())) {
             MessageBuilder message = new MessageBuilder();
             message.append("**<" + player.getName() + ">** " + Message);
             message.stripMentions(guild.getJDA());
-            messageChannel.sendMessage(message.build()).complete();
+            new BukkitRunnable() {
+                @Override
+                public void run() {
+                    messageChannel.sendMessage(message.build()).queue();
+                }
+            }.runTaskLater(this.plugin, 1);
         }
     }
     @EventHandler
     public void onAdvancementDone(PlayerAdvancementDoneEvent event) {
         Player player = event.getPlayer();
         List<String> toggledMessages = ConsoleCommands.toggledMessages;
-        if (event.getAdvancement() == null || event.getAdvancement().getKey().getKey().contains("recipe/") || event.getPlayer() == null || Main.messagesData.getConfig().getString("AdvancementKeys." + event.getAdvancement().getKey().getKey()) == null) return;
+        event.getAdvancement();
+        if (event.getAdvancement().getKey().getKey().contains("recipe/") || event.getPlayer() == null || Main.messagesData.getConfig().getString("AdvancementKeys." + event.getAdvancement().getKey().getKey()) == null) return;
         if (!toggledMessages.contains(player.getName())) {
 
             EmbedBuilder advanceEmbed = new EmbedBuilder();
@@ -205,7 +216,7 @@ public class MessageListener implements Listener {
 
     @EventHandler
     public void onPlayerJoin(PlayerJoinEvent event) {
-        if(plugin.getConfig().getBoolean("showjoinmessages") == true) return;
+        if(!plugin.getConfig().getBoolean("showjoinmessages")) return;
         Player player = event.getPlayer();
         int playerCount = Bukkit.getOnlinePlayers().size();
 
@@ -221,7 +232,7 @@ public class MessageListener implements Listener {
 
     @EventHandler
     public void onPlayerQuit(PlayerQuitEvent event) {
-        if(plugin.getConfig().getBoolean("showjoinmessages") == true) return;
+        if(!plugin.getConfig().getBoolean("showjoinmessages")) return;
         Player player = event.getPlayer();
         int playerCount = Bukkit.getOnlinePlayers().size() - 1;
         EmbedBuilder leaveEmbed = new EmbedBuilder();
