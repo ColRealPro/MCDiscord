@@ -104,7 +104,7 @@ public class Commands implements CommandExecutor {
                 TextComponent Info = new TextComponent(" [Show Info]");
                 Info.setColor(net.md_5.bungee.api.ChatColor.GRAY);
                 Info.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder("Click To Show Info").create()));
-                Info.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/discordtomclink:errorinfo duplicate"));
+                Info.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/MCDiscord:errorinfo duplicate"));
                 errorMessage.addExtra(Message);
                 errorMessage.addExtra(Info);
                 player.spigot().sendMessage(errorMessage);
