@@ -3,6 +3,7 @@ package me.colrealpro.discordlinkbot.commands;
 import me.colrealpro.discordlinkbot.Main;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.chat.*;
+import org.apache.logging.log4j.core.pattern.AbstractStyleNameConverter;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -42,6 +43,14 @@ public class Link implements CommandExecutor {
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
+
+        if (command.getName().equalsIgnoreCase("unlink")) {
+            Player player = (Player) sender;
+            Main.data.getConfig().set("Users." + player.getUniqueId() + ".Discord", null);
+            player.sendMessage(ChatColor.RED + "" + ChatColor.BOLD + "Hey! " + ChatColor.RESET + ChatColor.GRAY + "Your Discord account has now been disconnected from your minecraft account!");
+            return true;
+        }
+
         if (command.getName().equalsIgnoreCase("link")) {
             Player player = (Player) sender;
 

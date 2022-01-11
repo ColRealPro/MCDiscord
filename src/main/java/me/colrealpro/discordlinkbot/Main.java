@@ -98,6 +98,7 @@ public final class Main extends JavaPlugin {
         getCommand("sendmessages").setExecutor(new ConsoleCommands());
         getCommand("opensigntest").setExecutor(new OpenSignTest());
         getCommand("link").setExecutor(new Link());
+        getCommand("unlink").setExecutor(new Link());
         getServer().getPluginManager().registerEvents(new UnverifyInventories(), this);
         getCommand("errorinfo").setExecutor(new errorinfo());
     }

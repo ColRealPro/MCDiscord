@@ -20,15 +20,19 @@ commands:
     permission: chatlink.unverify
     permission-message: Sorry, you don't have the required permission to execute this command!
   sendmessages:
-    description: Used to send data between plugins created by ColRealPro
+    description: Used to send data between plugins created by ColRealPro [Deprecated Method]
     usage: /<command> [Data]
   opensigntest:
     description: Open sign test
     usage: /<command>
   link:
-    description: link discord account
+    description: Link Discord Account
     usage: /<command>
     aliases: [linkaccount, linkdiscord]
+  unlink:
+    description: Unlink your Discord account
+    usage: /<command>
+    aliases: [unlinkaccount, unlinkdiscord]
   errorinfo:
     description: used to show error info
     usage: /<command>
