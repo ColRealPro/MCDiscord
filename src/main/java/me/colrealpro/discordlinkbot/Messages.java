@@ -165,6 +165,7 @@ public class Messages extends ListenerAdapter implements Listener {
                     found.set(true);
                     event.getAuthor().openPrivateChannel().flatMap(channel -> channel.sendMessage("You have been successfully linked to the Minecraft Account: **" + player.getName() + "**")).queue();
                     Main.data.getConfig().set("Users." + key + ".Discord", event.getAuthor().getId());
+                    Main.data.getConfig().set("Users." + key + ".VerificationCode", null);
                     Main.data.saveConfig();
                     if (plugin.getConfig().getBoolean("VerificationRequired") == false) {
                         if (player.isOnline() == true) {
