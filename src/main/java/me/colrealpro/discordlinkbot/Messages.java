@@ -31,7 +31,7 @@ public class Messages extends ListenerAdapter implements Listener {
 
     TextChannel channel = Main.channel;
 
-    private Plugin plugin = Main.getPlugin(Main.class);
+    private final Plugin plugin = Main.getPlugin(Main.class);
 
     protected String getSaltString(int max) {
         String SALTCHARS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890";
@@ -41,19 +41,16 @@ public class Messages extends ListenerAdapter implements Listener {
             int index = (int) (rnd.nextFloat() * SALTCHARS.length());
             salt.append(SALTCHARS.charAt(index));
         }
-        String saltStr = salt.toString();
-        return saltStr;
+        return salt.toString();
 
     }
 
     private String getDurationString(int totalSecs) {
 
-        long hours = totalSecs / 3600;
         long minutes = (totalSecs % 3600) / 60;
         long seconds = totalSecs % 60;
 
-        String timeString = String.format("%02d minutes, %02d seconds", minutes, seconds);
-        return timeString;
+        return String.format("%02d minutes, %02d seconds", minutes, seconds);
     }
 
     public String Capital(String message) {
@@ -88,7 +85,7 @@ public class Messages extends ListenerAdapter implements Listener {
 
     @EventHandler
     public void onPlayerJoin(PlayerLoginEvent event) {
-        if (plugin.getConfig().getBoolean("VerificationRequired") == false) return;
+        if (!plugin.getConfig().getBoolean("VerificationRequired")) return;
 
         Player player = event.getPlayer();
         boolean Verified = Main.data.getConfig().isSet("Users." + player.getUniqueId() + ".Discord");
@@ -96,7 +93,7 @@ public class Messages extends ListenerAdapter implements Listener {
         boolean unallowed = Main.data.getConfig().isSet("Users." + player.getUniqueId() + ".unallowed");
         String verifyCode = getSaltString(plugin.getConfig().getInt("VerificationCodeLength"));
 
-        if (unallowed == true) {
+        if (unallowed) {
             long StartTime = Main.data.getConfig().getLong("Users." + player.getUniqueId() + ".timeUnallowed");
             String reason = Main.data.getConfig().getString("Users." + player.getUniqueId() + ".reason");
             if (Instant.now().getEpochSecond() - StartTime >= Main.data.getConfig().getInt("Users." + player.getUniqueId() + ".time")) {
@@ -105,7 +102,7 @@ public class Messages extends ListenerAdapter implements Listener {
                 Main.data.getConfig().set("Users." + player.getUniqueId() + ".reason", null);
                 Main.data.saveConfig();
                 verifyCode = getSaltString(plugin.getConfig().getInt("UnverificationCodeLength"));
-                if (VerifiedCode == true && Verified == true) {
+                if (VerifiedCode && Verified) {
                     Main.data.getConfig().set("Users." + player.getUniqueId() + ".VerificationCode", null);
                     Main.data.saveConfig();
                 }
@@ -115,7 +112,7 @@ public class Messages extends ListenerAdapter implements Listener {
                 }
 
                 if (Verified == false) {
-                    if (VerifiedCode == true) {
+                    if (VerifiedCode) {
                         verifyCode = Main.data.getConfig().getString("Users." + player.getUniqueId() + ".VerificationCode");
                     } else {
                         Main.data.getConfig().set("Users." + player.getUniqueId() + ".VerificationCode", verifyCode);
@@ -133,7 +130,7 @@ public class Messages extends ListenerAdapter implements Listener {
             return;
         }
 
-        if (VerifiedCode == true && Verified == true) {
+        if (VerifiedCode && Verified) {
             Main.data.getConfig().set("Users." + player.getUniqueId() + ".VerificationCode", null);
             Main.data.saveConfig();
         }
@@ -143,7 +140,7 @@ public class Messages extends ListenerAdapter implements Listener {
         }
 
         if (Verified == false) {
-            if (VerifiedCode == true) {
+            if (VerifiedCode) {
                 verifyCode = Main.data.getConfig().getString("Users." + player.getUniqueId() + ".VerificationCode");
             } else {
                 Main.data.getConfig().set("Users." + player.getUniqueId() + ".VerificationCode", verifyCode);
@@ -156,7 +153,7 @@ public class Messages extends ListenerAdapter implements Listener {
 
     @Override
     public void onPrivateMessageReceived(@NotNull PrivateMessageReceivedEvent event) {
-        if (!(event.getAuthor().isBot() == false)) {
+        if (event.getAuthor().isBot()) {
             return;
         }
         AtomicBoolean found = new AtomicBoolean(false);
