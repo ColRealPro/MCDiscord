@@ -3,8 +3,12 @@ package me.colrealpro.discordlinkbot;
 import me.colrealpro.discordlinkbot.commands.ConsoleCommands;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.MessageBuilder;
+import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.Guild;
+import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.TextChannel;
+import net.dv8tion.jda.api.entities.User;
+import net.dv8tion.jda.internal.utils.PermissionUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.ConfigurationSection;
@@ -74,6 +78,11 @@ public class MessageListener implements Listener {
 
         String Message = event.getMessage();
         if (event.getMessage().startsWith("#")) {
+            if(!Main.data.getConfig().isSet("Users." + player.getUniqueId() + ".Discord")) {
+                player.sendMessage(ChatColor.RED + "" + ChatColor.BOLD + "Hey! " + ChatColor.RESET + ChatColor.GRAY + "You need to link your account before you can use this feature!");
+                event.setCancelled(true);
+                return;
+            }
             // Player is trying to send a message to a channel
             Message = Message.substring(1);
             String[] args = Message.split(" ");
@@ -94,6 +103,14 @@ public class MessageListener implements Listener {
                 String arr[] = Message.split(" ", 2);
                 splitMessage.append("**<" + player.getName() + ">** " + arr[1]);
                 splitMessage.stripMentions(guild.getJDA());
+
+                Member member = guild.retrieveMemberById(Main.data.getConfig().getString("Users." + event.getPlayer().getUniqueId() + ".Discord")).complete();
+
+                if (!member.hasPermission(channel, Permission.MESSAGE_WRITE)) {
+                    event.setCancelled(true);
+                    player.sendMessage(ChatColor.RED + "" + ChatColor.BOLD + "Hey!" + ChatColor.RESET + ChatColor.GRAY + "You don't have permission to speak in this channel!");
+                    return;
+                }
 
                 new BukkitRunnable() {
                     @Override
@@ -129,6 +146,13 @@ public class MessageListener implements Listener {
                     splitMessage.append("**<" + player.getName() + ">** " + arr[1]);
                     splitMessage.stripMentions(guild.getJDA());
 
+                    Member member = guild.retrieveMemberById(Main.data.getConfig().getString("Users." + event.getPlayer().getUniqueId() + ".Discord")).complete();
+
+                    if (!member.hasPermission(channel, Permission.MESSAGE_WRITE)) {
+                        event.setCancelled(true);
+                        player.sendMessage(ChatColor.RED + "" + ChatColor.BOLD + "Hey!" + ChatColor.RESET + ChatColor.GRAY + "You don't have permission to speak in this channel!");
+                        return;
+                    }
                     new BukkitRunnable() {
                         @Override
                         public void run() {
@@ -161,6 +185,15 @@ public class MessageListener implements Listener {
             splitMessage.append("**<" + player.getName() + ">** " + arr[1]);
             splitMessage.stripMentions(guild.getJDA());
 
+
+            Member member = guild.retrieveMemberById(Main.data.getConfig().getString("Users." + event.getPlayer().getUniqueId() + ".Discord")).complete();
+
+            if (!member.hasPermission(channel, Permission.MESSAGE_WRITE)) {
+                event.setCancelled(true);
+                player.sendMessage(ChatColor.RED + "" + ChatColor.BOLD + "Hey! " + ChatColor.RESET + ChatColor.GRAY + "You don't have permission to speak in this channel!");
+                return;
+            }
+
             new BukkitRunnable() {
                 @Override
                 public void run() {
@@ -187,6 +220,7 @@ public class MessageListener implements Listener {
             MessageBuilder message = new MessageBuilder();
             message.append("**<" + player.getName() + ">** " + Message);
             message.stripMentions(guild.getJDA());
+
             new BukkitRunnable() {
                 @Override
                 public void run() {
