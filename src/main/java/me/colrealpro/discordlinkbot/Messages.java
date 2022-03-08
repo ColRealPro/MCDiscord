@@ -194,8 +194,11 @@ public class Messages extends ListenerAdapter implements Listener {
 
         for(Player p : Bukkit.getOnlinePlayers()){
             if (toggledVisible.contains(p.getName())) continue;
-            if (toggledChannels.get(p.getUniqueId()) == null) continue;
-            if (toggledChannels.get(p.getUniqueId()).containsKey(event.getChannel().getIdLong()) == false && !(event.getChannel().getId().equals(channel.getId()))) continue;
+            if (toggledChannels.get(p.getUniqueId()) == null) {
+                if (!(event.getChannel().getIdLong() == channel.getIdLong())) continue;
+            } else {
+                if (toggledChannels.get(p.getUniqueId()).containsKey(event.getChannel().getIdLong()) == false && !(event.getChannel().getIdLong() == channel.getIdLong())) continue;
+            }
             if (event.getChannel().getIdLong() == channel.getIdLong() || toggledChannels.get(p.getUniqueId()).get(event.getChannel().getIdLong()) == true) {
                 p.sendMessage(ChatColor.WHITE + "[" + ChatColor.BLUE + "#" + Capital(event.getChannel().getName().replaceAll("-", " ")) + ChatColor.WHITE + "] " + ChatColor.BOLD + event.getAuthor().getName() + ChatColor.RESET + ChatColor.DARK_GRAY + " >> " + ChatColor.WHITE + message);
             }
