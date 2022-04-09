@@ -1,6 +1,7 @@
 package me.colrealpro.discordlinkbot.commands;
 
 import com.sun.org.apache.xpath.internal.operations.Bool;
+import me.colrealpro.discordlinkbot.Files.DataManager;
 import me.colrealpro.discordlinkbot.Main;
 import me.colrealpro.discordlinkbot.Messages;
 import net.dv8tion.jda.api.entities.Guild;
@@ -132,15 +133,19 @@ public class Commands implements CommandExecutor {
 
         // /chatlink (Setting) (True/False)
         if (command.getName().equalsIgnoreCase("chatlink")) {
-            if (!(args.length >= 2)) {
-                player.sendMessage(ChatColor.BOLD + "" + ChatColor.RED + "(!)" + ChatColor.RESET + ChatColor.GOLD + " Syntax: (Setting) (True/False)");
+            player.sendMessage(ChatColor.RED + "WARNING! EXPERIMENTAL COMMAND, EXPECT BUGS");
+
+            if (!(args.length >= 1)) {
+                player.sendMessage(ChatColor.BOLD + "" + ChatColor.RED + "(!)" + ChatColor.RESET + ChatColor.GOLD + " Please choose a channel!");
                 return true;
             }
 
             String TrueFalse = args[1].toLowerCase().replaceAll(" ","");
             String Setting = args[0].toLowerCase().replaceAll(" ","");
 
-            if (Setting.equals("sendmessages") || Setting.equals("visible")) {
+            // Deprecated Code (very bad)
+
+            /*if (Setting.equals("sendmessages") || Setting.equals("visible")) {
                 if (TrueFalse.equals("true") || TrueFalse.equals("false")) {
                     if (TrueFalse.equals("true")) {
                         if (Setting.equals("sendmessages")) {
@@ -191,7 +196,17 @@ public class Commands implements CommandExecutor {
                 }
             } else {
                 player.sendMessage(ChatColor.BOLD + "" + ChatColor.RED + "(!)" + ChatColor.RESET + ChatColor.GOLD + " Supported Settings: SendMessages, Visible");
+            }*/
+
+            switch (Setting) {
+                case "visible":
+                    if (args[1] == null) {
+
+                    }
+                    Main.data.getConfig().set("Users." + player.getUniqueId() + ".ShowMessages", true);
+                    break;
             }
+
         }
 
         if (command.getName().equalsIgnoreCase("unverify")) {

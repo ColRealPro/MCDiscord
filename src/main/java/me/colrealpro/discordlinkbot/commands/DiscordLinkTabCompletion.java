@@ -16,12 +16,13 @@ public class DiscordLinkTabCompletion implements TabCompleter {
 
             channels.add("SendMessages");
             channels.add("Visible");
+            channels.add("ShowRoles");
 
             return channels;
         } else if (args.length == 2) {
             List<String> trueFalse = new ArrayList<>();
-            trueFalse.add("true");
-            trueFalse.add("false");
+            trueFalse.add("Enabled");
+            trueFalse.add("Disabled");
             return trueFalse;
         }
 
