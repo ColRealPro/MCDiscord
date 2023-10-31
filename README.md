@@ -2,6 +2,10 @@
 
 Easy way to link minecraft and discord together!
 
+# Archived Warning
+This repository has been archived as I no longer maintain it, I might come back to it in the future but not now.
+The plugin is most likely broken if you build from source, I never tested it, and I have no clue what I changed.
+
 ## Config:
 ### Bot Token:
 Needed for the plugin to use your bot
